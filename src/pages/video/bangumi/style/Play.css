@@ -1,0 +1,5 @@
+.app-video-bangumi-play-player {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

@@ -1,0 +1,10 @@
+import _FormPage from "./form-page";
+import _TablePage from "./table-page";
+import _FormDialog from "./form-dialog";
+import _CrudPage from "./crud-page";
+import _EditPage from "./edit-page";
+export const FormPage = _FormPage;
+export const TablePage = _TablePage;
+export const FormDialog = _FormDialog;
+export const CrudPage = _CrudPage;
+export const EditPage = _EditPage;

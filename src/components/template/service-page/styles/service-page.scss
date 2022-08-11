@@ -1,0 +1,23 @@
+.app-component-template-service-page {
+  min-width: 1280px;
+  height: 100%;
+  display: flex;
+  margin: 0 auto;
+  border-top: 1px solid #f0f0f0;
+}
+
+.app-component-template-service-page-left {
+  flex: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-width: 280px;
+  height: 100%;
+  border-left: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+}
+
+.app-component-template-service-page-main {
+  flex: 1;
+  overflow-y: auto;
+  border-right: 1px solid #f0f0f0;
+}

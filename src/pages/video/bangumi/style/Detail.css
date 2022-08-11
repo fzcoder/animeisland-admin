@@ -1,0 +1,20 @@
+.app-video-bangumi-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.app-video-bangumi-detail-header {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.app-video-bangumi-detail-header-cover {
+  flex: 0;
+  max-height: 360px;
+}
+
+.app-video-bangumi-detail-header-info {
+  flex: 1;
+  max-height: 360px;
+}

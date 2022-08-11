@@ -1,0 +1,21 @@
+.app-component-template-module-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-component-template-module-page-header {
+  flex: 0;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.app-component-template-module-page-main {
+  height: 100%;
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}

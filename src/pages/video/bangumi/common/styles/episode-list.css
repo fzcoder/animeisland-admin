@@ -1,0 +1,18 @@
+.app-video-bangumi-common-episodelist-item {
+  display: flex;
+  flex-direction: row;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.app-video-bangumi-common-episodelist-item p {
+  color: gray;
+  margin: 0;
+}
+.app-video-bangumi-common-episodelist-item-cover {
+  flex: 0;
+}
+.app-video-bangumi-common-episodelist-item-info {
+  flex: 1;
+}
