@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, } from 'react-router-dom';
 import { Menu, MenuProps } from 'antd';
-import "./styles/service-page.scss";
+import "./styles/service-page.css";
 
 export declare type ServicePageProps = {
   left?: React.ReactNode,

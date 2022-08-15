@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Space, Input } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
 import { SpinProps } from 'antd/lib/spin';
-import "./styles/TablePage.scss";
+import "./styles/TablePage.css";
 
 const { Search } = Input;
 

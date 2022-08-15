@@ -50,12 +50,12 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-const requiredAuth = () => {
+/* const requiredAuth = () => {
   setTimeout(() => {
     localStorage.clear();
     window.location.href = '/login';
   }, 1500);
-}
+} */
 
 // response interceptors
 axiosInstance.interceptors.response.use(
@@ -70,10 +70,10 @@ axiosInstance.interceptors.response.use(
         case HTTP_SC_BAD_REQUEST:
           return Promise.reject("400 BAD REQUEST");
         case HTTP_SC_UNAUTHORIZED:
-          requiredAuth();
+          // requiredAuth();
           return Promise.reject("401 UNAUTHORIZED");
         case HTTP_SC_FORBIDDEN:
-          requiredAuth();
+          // requiredAuth();
           return Promise.reject("403 FORBIDDEN");
         case HTTP_SC_NOT_FOUND:
           return Promise.reject("404 NOT FOUND");

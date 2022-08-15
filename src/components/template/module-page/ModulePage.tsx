@@ -1,7 +1,7 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Breadcrumb, Skeleton, BreadcrumbProps, } from 'antd';
-import "./styles/module-page.scss";
+import "./styles/module-page.css";
 
 type ModulePageFallbackProps = {
   delay?: number,
@@ -50,9 +50,9 @@ const ModulePage: React.FC<ModulePageProps> = ({
   useEffect(() => {
     (async () => {
       if (renderHtmlTitle) {
-        document.title = (renderHtmlTitle("AnimeIsland Admin"))
+        document.title = (renderHtmlTitle("动漫岛后台管理系统"))
       } else {
-        document.title = "AnimeIsland Admin"
+        document.title = "动漫岛后台管理系统"
       }
       try {
       } catch (err: any) {

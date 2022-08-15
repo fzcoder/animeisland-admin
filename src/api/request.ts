@@ -22,12 +22,12 @@ export declare type PageResultSet<T = Record<string, any>> = {
   total: number,
 }
 
-const gotoLoginPage = () => {
+/* const gotoLoginPage = () => {
   setTimeout(() => {
     localStorage.clear();
     window.location.href = '/login';
   }, 1500);
-}
+} */
 
 // Get
 export async function get<T = any, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<T> {
@@ -40,7 +40,7 @@ export async function get<T = any, D = any>(url: string, config?: AxiosRequestCo
         return Promise.reject(msg || '请求错误 Bad Request');
       case RC_UNAUTHORIZED:
         message.error(msg || '无访问权限 Unauthorized');
-        gotoLoginPage(); // 跳转到登录页
+        // gotoLoginPage(); // 跳转到登录页
         return Promise.reject(msg || '无访问权限 Unauthorized');
       case RC_NOT_FOUND:
         message.error(msg || '资源不存在 Not Found');
@@ -71,7 +71,7 @@ export async function post<T = any, D = any>(url: string, requestBody?: any, con
         return Promise.reject(msg || '请求错误 Bad Request');
       case RC_UNAUTHORIZED:
         message.error(msg || '无访问权限 Unauthorized');
-        gotoLoginPage(); // 跳转到登录页
+        // gotoLoginPage(); // 跳转到登录页
         return Promise.reject(msg || '无访问权限 Unauthorized');
       case RC_NOT_FOUND:
         message.error(msg || '资源不存在 Not Found');
@@ -102,7 +102,7 @@ export async function put<T = any, D = any>(url: string, requestBody?: any, conf
         return Promise.reject(msg || '请求错误 Bad Request');
       case RC_UNAUTHORIZED:
         message.error(msg || '无访问权限 Unauthorized');
-        gotoLoginPage(); // 跳转到登录页
+        // gotoLoginPage(); // 跳转到登录页
         return Promise.reject(msg || '无访问权限 Unauthorized');
       case RC_NOT_FOUND:
         message.error(msg || '资源不存在 Not Found');
@@ -133,7 +133,7 @@ export async function del<T = any, D = any>(url: string, config?: AxiosRequestCo
         return Promise.reject(msg || '请求错误 Bad Request');
       case RC_UNAUTHORIZED:
         message.error(msg || '无访问权限 Unauthorized');
-        gotoLoginPage(); // 跳转到登录页
+        // gotoLoginPage(); // 跳转到登录页
         return Promise.reject(msg || '无访问权限 Unauthorized');
       case RC_NOT_FOUND:
         message.error(msg || '资源不存在 Not Found');
@@ -164,7 +164,7 @@ export async function request<T = any, D = any>(url: string, config?: AxiosReque
         return Promise.reject(msg || '请求错误 Bad Request');
       case RC_UNAUTHORIZED:
         message.error(msg || '无访问权限 Unauthorized');
-        gotoLoginPage(); // 跳转到登录页
+        // gotoLoginPage(); // 跳转到登录页
         return Promise.reject(msg || '无访问权限 Unauthorized');
       case RC_NOT_FOUND:
         message.error(msg || '资源不存在 Not Found');

@@ -1,9 +1,9 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, globalShortcut} = require('electron')
 const path = require('path');
-const url = require('url');
+const url = require('electron')
 
-// 获取在 package.json 中的命令脚本传入的参数，来判断是开发还是生产环境
+// get params
 const mode = process.argv[2];
 
 function createWindow () {
@@ -13,29 +13,32 @@ function createWindow () {
     height: 800,
     minWidth: 1300,
     minHeight: 800,
+    icon: path.join(__dirname, './public/favicon.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-  //判断是否是开发模式 
+  // is dev mode?
   if(mode === 'dev') { 
     mainWindow.loadURL("http://localhost:3000")
   } else {
     // and load the index.html of the app.
-    mainWindow.loadFile('index.html')
+    mainWindow.loadFile("./build/index.html")
   }
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
-  // 隐藏菜单栏
+  // Hide the MenuBar
   const { Menu } = require('electron')
   Menu.setApplicationMenu(null)
+  globalShortcut.register('CommandOrControl+Shift+i', () => {
+    // Open the DevTools.
+    BrowserWindow.getFocusedWindow().webContents.openDevTools()
+  })
+  createWindow()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

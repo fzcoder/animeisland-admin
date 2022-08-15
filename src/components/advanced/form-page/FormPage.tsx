@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Space, Button, ButtonProps, FormInstance, Skeleton } from "antd";
-import './styles/FormPage.scss';
+import './styles/FormPage.css';
 
 // 表单项属性
 export declare type FormItemProps = {

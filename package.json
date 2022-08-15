@@ -18,7 +18,6 @@
     "array-move": "^4.0.0",
     "axios": "^0.26.0",
     "hls.js": "^1.1.5",
-    "node-sass": "^7.0.1",
     "qs": "^6.11.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -35,7 +34,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron-dev": "electron . dev",
-    "electron": "electron ."
+    "electron": "electron .",
+    "package": "electron-packager . AnimeIslandManager --platform=win32 --out=./out --icon=./public/favicon.ico --asar"
   },
   "eslintConfig": {
     "extends": [

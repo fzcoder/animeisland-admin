@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message, FormInstance } from 'antd';
 import { FormPage, FormProps, FormButtonGroupProps, FormItemProps } from '../../../components/advanced';
-import "./styles/edit-page.scss";
+import "./styles/edit-page.css";
 
 export declare type EditPageProps = {
   className?: string,

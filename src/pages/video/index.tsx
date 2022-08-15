@@ -81,7 +81,7 @@ export const VideoServiceHome = () => (
         { path: '', breadcrumbName: '主页' },
       ]
     }}
-    renderHtmlTitle={(brand) => { return `${brand} | 视频服务`}}
+    renderHtmlTitle={(brand) => { return `${brand} | 首页`}}
     main={<Home />}
   />
 );

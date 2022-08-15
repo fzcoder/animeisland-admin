@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Tabs, Row, Col, Typography } from 'antd';
 import { EpisodeProps } from "../../../../api/video/episode";
 import "./styles/episode-list.css";
@@ -20,6 +21,7 @@ export type EpisodeListProps = {
 const EpisodeList: React.FC<EpisodeListProps> = ({
   episodes
 }) => {
+  const navigate = useNavigate();
   const [tabPanes, setTabPanes] = useState<EpisodeListTabPaneProps[]>([]);
   const GroupNum = 8;
 
@@ -60,7 +62,7 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
                         <Col span={6} key={index}>
                           <a
                             className='app-video-bangumi-common-episodelist-item'
-                            href={`/video/bangumi/play/${child.id}`}
+                            onClick={() => navigate(`/video/bangumi/play/${child.id}`)}
                           >
                             <div className='app-video-bangumi-common-episodelist-item-cover'></div>
                             <div className='app-video-bangumi-common-episodelist-item-info'>
