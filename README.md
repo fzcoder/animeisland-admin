@@ -21,13 +21,21 @@ git clone git@github.com:fzcoder/animeisland-admin.git
 npm install
 ```
 
-### 3.启动React项目(开发模式)
+### 3.修改配置文件
+
+在项目根目录下找到`.env.development`和`.env.production`, 根据实际情况修改以下内容:
+
+```
+REACT_APP_SERVER_BASE_URL=http://{your_server_host}:{port}/api
+```
+
+### 4.启动React项目(开发模式)
 
 ```shell
 npm start
 ```
 
-### 4.启动Electron项目(开发模式)
+### 5.启动Electron项目(开发模式)
 
 ```shell
 npm run electron-dev
