@@ -1,9 +1,21 @@
 import React, { useState, useEffect }  from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Space, Modal, message } from "antd";
-import { PlusOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined, } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  DragOutlined,
+  CheckOutlined,
+} from '@ant-design/icons';
 import { TablePage, FormDialog, FormItemProps } from "..";
-import { TableColumnsType, TableExpandable, SelectionButtonProps as TableSelectionButtonProps } from "../table-page";
+import {
+  TableColumnsType,
+  TableExpandable,
+  SelectionButtonProps as TableSelectionButtonProps
+} from "../table-page";
+import { arrayMoveImmutable } from 'array-move';
 
 const { confirm } = Modal;
 
@@ -18,6 +30,7 @@ export declare type CrudPageProps = {
   showAddRecordButton?: boolean,
   toolbarLeftExtra?: React.ReactNode,
   showTableActionsColumn?: boolean,
+  showTableDraggableButton?: boolean,
   tableActionsColumnWidth?: number,
   tableColumnsProps?: TableColumnsType[],
   tableExpandableProps?: TableExpandable,
@@ -31,6 +44,7 @@ export declare type CrudPageProps = {
   useUpdateFormDialog?: boolean,
   updateFormTitle?: React.ReactNode,
   updateFormItemProps?: FormItemProps[],
+  onFinishDrag?: (newData: object[]) => Promise<any>,
   beforeOpenUpdateFormDialog?: (value: any, record: any, index: number) => Promise<Record<string, any>>,
   onSubmitUpdateForm?: (form: Record<string, any>) => Promise<any>,
   extraTableActions?: (value: any, record: any, index: number) => React.ReactNode,
@@ -46,6 +60,7 @@ const CrudPage: React.FC<CrudPageProps> = (props) => {
     header,
     footer,
     showAddRecordButton,
+    showTableDraggableButton,
     toolbarLeftExtra,
     showTableActionsColumn,
     tableActionsColumnWidth,
@@ -69,8 +84,10 @@ const CrudPage: React.FC<CrudPageProps> = (props) => {
     onUpdateRecord,
     onDeleteRecord,
     onDeleteSelectedRecords,
+    onFinishDrag,
   } = props;
   const navigate = useNavigate();
+  const [finishInit, setFinishInit] = useState<boolean>(false);
   // datasource
   const [dataSource, setDataSource] = useState<object[]>();
   const [total, setTotal] = useState<number>(0);
@@ -87,6 +104,9 @@ const CrudPage: React.FC<CrudPageProps> = (props) => {
   // update form
   const [showUpdateForm, setShowUpdateForm] = useState<boolean>(false);
   const [updateFormData, setUpdateFormData] = useState<Record<string, any> | undefined>(undefined);
+  // draggable
+  const [tableDraggable, setTableDraggable] = useState<boolean>(false);
+  const [draggedDataSource, setDraggedDataSource] = useState<object[]>([]);
   // 获取记录
   const getRecords = async (keyword: string, pageNum: number, pageSize: number) => {
     if (onGetRecords) {
@@ -189,6 +209,11 @@ const CrudPage: React.FC<CrudPageProps> = (props) => {
     const _tableColumns = [...tableColumnsProps, action];
     setTableColumns(_tableColumns);
   }
+  const tableColumnsWithoutActions = () => {
+    if (tableColumnsProps === undefined) return;
+    const _tableColumns = [...tableColumnsProps];
+    setTableColumns(_tableColumns);
+  }
   // 提交创建表单
   const submitAddForm = async (form: Record<string, any>) => {
     if (onSubmitAddForm) {
@@ -215,13 +240,38 @@ const CrudPage: React.FC<CrudPageProps> = (props) => {
       })
     }
   }
+  // 处理完成拖拽排序事件
+  const handleFinishDragEvent = async () => {
+    try {
+      if (onFinishDrag) {
+        await onFinishDrag(dataSource);
+        await getRecords(keyword, pageNum, pageSize);
+      }
+    } catch (err: any) {
+      message.error(err);
+    }
+  }
   // 初始化
   useEffect(() => {
     if (showTableActionsColumn || showTableActionsColumn === undefined) {
       tableColumnsWithActions();
     }
     getRecords(keyword, pageNum, pageSize);
+    setFinishInit(true);
   }, []);
+  useEffect(() => {
+    if (finishInit) {
+      if (tableDraggable) {
+        tableColumnsWithoutActions();
+        getRecords("", 1, total);
+      } else {
+        tableColumnsWithActions();
+        if (!onFinishDrag) {
+          getRecords(keyword, pageNum, pageSize);
+        }
+      }
+    }
+  }, [tableDraggable])
   // render
   return (
     <>
@@ -280,6 +330,7 @@ const CrudPage: React.FC<CrudPageProps> = (props) => {
                   <Button
                     icon={<PlusOutlined/>}
                     type={'primary'}
+                    disabled={tableDraggable}
                     onClick={(event) => {
                       if (useAddFormDialog) { // 如果使用FormDialog
                         if (beforeOpenAddFormDialog) { // 钩子函数, 用于自定义表单初始值
@@ -303,6 +354,20 @@ const CrudPage: React.FC<CrudPageProps> = (props) => {
                       }
                     }}
                   >添加</Button>
+                }
+                {
+                  showTableDraggableButton &&
+                  <Button
+                    icon={tableDraggable ? <CheckOutlined /> : <DragOutlined />}
+                    children={tableDraggable ? "完成排序" : "拖拽排序"}
+                    onClick={() => {
+                      const currentStatus = tableDraggable;
+                      setTableDraggable(!tableDraggable);
+                      if (currentStatus) {
+                        handleFinishDragEvent();
+                      }
+                    }}
+                  />
                 }
               </>
               {toolbarLeftExtra}
@@ -354,6 +419,18 @@ const CrudPage: React.FC<CrudPageProps> = (props) => {
             }
           },
           rowKey: tableRowKey || 'id',
+          draggable: tableDraggable,
+          dragConfig: {
+            onDragEnd: ({ oldIndex, newIndex }) => {
+              if (oldIndex !== newIndex) {
+                const newData = arrayMoveImmutable(dataSource.slice(), oldIndex, newIndex).filter(
+                  (el: object) => !!el,
+                );
+                // setDraggedDataSource(newData);
+                setDataSource(newData);
+              }
+            }
+          }
         }}
       />
     </>

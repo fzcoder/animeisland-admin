@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; 
 import {
-  message, 
-  Timeline, 
-  Image, 
-  Space, 
+  message,
+  Image,
   Card, 
-  Button, 
   Row, 
-  Col, 
-  Tag, 
-  Descriptions,
+  Col,
   Typography
 } from "antd";
-import { EditOutlined } from "@ant-design/icons";
 import { getRecords } from "../../../api/video/bangumi";
 import { getUserInfo } from "../../../api/auth/user";
 import { UserInfo } from "../../../api/auth/user";

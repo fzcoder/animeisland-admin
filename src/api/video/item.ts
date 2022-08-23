@@ -53,10 +53,10 @@ export const getVideoItemWithPlayList = async (id?: string | number): Promise<Re
   }
 }
 
-export const getRecords = async (keyword: string, pageNum: number, pageSize: number): Promise<{total: number, records: object[]}> => {
+export const getRecords = async (keyword: string, pageNum: number, pageSize: number): Promise<{total: number, records: Record<string, any>[]}> => {
   try {
     const { id: uid } = await getUserInfo();
-    const { total, records } = await get<{total: number, records: object[]}, any>('/video/item/page', {
+    const { total, records } = await get<{total: number, records: Record<string, any>[]}, any>('/video/item/page', {
       params: {
         key: keyword,
         page_num: pageNum,

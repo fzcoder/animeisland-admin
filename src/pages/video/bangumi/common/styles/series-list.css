@@ -1,0 +1,30 @@
+.app-video-bangumi-common-series-list-header {
+  border-bottom: 1px solid #f0f0f0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.app-video-bangumi-common-series-list-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: inherit;
+  overflow-x: auto;
+  padding-top: 16px;
+}
+.app-video-bangumi-common-series-item {
+  padding: 8px 16px 8px 16px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+.app-video-bangumi-common-series-item:hover {
+  cursor: pointer;
+}
+.app-video-bangumi-common-series-item-current {
+  padding: 8px 16px 8px 16px;
+  background-color: #f0f0f0;
+  color: #1890ff;
+  border-radius: 4px;
+}
+.app-video-bangumi-common-series-item-current:hover {
+  cursor: pointer;
+}

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Input } from 'antd';
+import { Button, Space, Input } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
 import { SpinProps } from 'antd/lib/spin';
+import { TablePlus } from '../../table';
+import type { TablePlusDraggableConfig } from "../../table";
 import "./styles/TablePage.css";
 
 const { Search } = Input;
 
+type DefaultRecordType = Record<string, any>;
 export declare type TableColumnsTypeAlign = "left" | "right" | "center";
 
 export declare type TableColumnsType = {
@@ -49,6 +52,9 @@ export declare type TableProps = {
   rowKey?: string,
   selectionProps?: TableSelectionProps,
   size?: TableSize,
+  draggable?: boolean,
+  dragConfig?: TablePlusDraggableConfig<DefaultRecordType>,
+  /** @deprecated This prop will be deprecated in v0.1.0 */
   onUpdateQueryOptions?: (keyword: string, pageNum: number, pageSize: number) => void
 }
 
@@ -138,7 +144,10 @@ const TablePage: React.FC<TablePageProps> = (props) => {
                                   onClick(selectedRowKeys, selectedRows);
                                 }
                               }}
-                              disabled={disabled !== undefined ? disabled : selectedRowKeys.length < 1}
+                              disabled={
+                                (disabled !== undefined ? disabled : selectedRowKeys.length < 1) 
+                                || tableProps.draggable
+                              }
                               {...restProps}
                             >
                               {children}
@@ -153,6 +162,7 @@ const TablePage: React.FC<TablePageProps> = (props) => {
                       placeholder={'please input keyword'}
                       style={{ width: 250 }}
                       size={'middle'}
+                      disabled={tableProps.draggable}
                       onSearch={(value, event) => {
                         setKeyword(value);
                         if (toolbarProps.onSearch) {
@@ -167,16 +177,23 @@ const TablePage: React.FC<TablePageProps> = (props) => {
                 ]
               }
             </div>
-            <Table
+            <TablePlus
               bordered={tableProps?.bordered}
               columns={tableProps?.columns}
               dataSource={tableProps?.dataSource}
               expandable={tableProps?.expandable}
               loading={tableProps?.loading}
-              pagination={tableProps?.pagination? tablePaginationProps : false}
+              pagination={
+                (tableProps?.pagination && !tableProps.draggable)? tablePaginationProps : false
+              }
               rowKey={tableProps?.rowKey}
-              rowSelection={tableProps?.selectionProps? tableRowSelectionProps : undefined}
+              rowSelection={
+                (tableProps?.selectionProps && !tableProps.draggable)? tableRowSelectionProps : undefined
+              }
               size={tableProps?.size}
+              draggable={
+                tableProps.draggable ? tableProps.dragConfig : false
+              }
             />
           </Space>
         </div>

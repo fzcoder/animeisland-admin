@@ -18,7 +18,11 @@ import {
   VideoServiceItemTable,
   VideoServiceItemUpdate,
   VideoServiceItemUpload,
-  VideoServiceSettings,
+  VideoSeriesCreate,
+  VideoSeriesDetails,
+  VideoSeriesTable,
+  VideoSeriesUpdate,
+  // VideoServiceSettings,
   VideoServiceSourceCreate,
   VideoServiceSourceList,
   VideoServiceSourceUpdate,
@@ -46,6 +50,11 @@ const VideoServiceRoutes = (
     <Route path='/video/item/list' element={<Authentication><VideoServiceItemTable /></Authentication>} />
     <Route path='/video/item/edit/:id' element={<Authentication><VideoServiceItemUpdate /></Authentication>} />
     <Route path='/video/item/upload' element={<Authentication><VideoServiceItemUpload /></Authentication>} />
+    {/** series */}
+    <Route path='/video/series/edit' element={<Authentication><VideoSeriesCreate /></Authentication>} />
+    <Route path='/video/series/details/:id' element={<Authentication><VideoSeriesDetails /></Authentication>} />
+    <Route path='/video/series/list' element={<Authentication><VideoSeriesTable /></Authentication>} />
+    <Route path='/video/series/edit/:id' element={<Authentication><VideoSeriesUpdate /></Authentication>} />
     {/** source */}
     <Route path='/video/source/edit' element={<Authentication><VideoServiceSourceCreate /></Authentication>} />
     <Route path='/video/source/list' element={<Authentication><VideoServiceSourceList /></Authentication>} />

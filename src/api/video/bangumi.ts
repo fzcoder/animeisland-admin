@@ -58,6 +58,18 @@ export const getView = async (id?: string | number): Promise<Record<string, any>
   }
 }
 
+export const getBangumiList = async (queryParams?: Record<string, any>): Promise<BangumiProps[]> => {
+  try {
+    const { id: uid } = await getUserInfo();
+    const data = await get<BangumiProps[], any>('/video/bangumi', {
+      params: {uid, ...queryParams}
+    });
+    return Promise.resolve(data);
+  } catch (err: any) {
+    return Promise.reject(err);
+  }
+}
+
 export const getRecords = async (keyword: string, pageNum: number, pageSize: number): Promise<{total: number, records: object[]}> => {
   try {
     const { id: uid } = await getUserInfo();

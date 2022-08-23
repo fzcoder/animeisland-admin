@@ -1,10 +1,6 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import Router from './routers';
-import axiosInstance from "./api";
 import './index.css';
-
-React['$http'] = axiosInstance;
 
 ReactDOM.render(
   <Router />,

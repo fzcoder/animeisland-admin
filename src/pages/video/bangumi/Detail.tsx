@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { Image, message, Descriptions, Space, Tag } from 'antd';
 import { getCountryNameByCode } from "../../../api/utils/country";
 import { getStatus, getView } from "../../../api/video/bangumi";
 import { getList as getEpisodeList, EpisodeProps } from "../../../api/video/episode";
+import { getSeriesList, SeriesItemProps } from '../../../api/video/series';
 import EpisodeList from "./common/EpisodeList";
+import SeriesList from './common/SeriesList';
 import './style/Detail.css';
 
 // 番剧
 type Bangumi = Record<string, any>;
 
 const VideoBangumiDetail: React.FC<{}> = () => {
+  const navigate = useNavigate();
   const params = useParams();
   const [bangumi, setBangumi] = useState<Bangumi | undefined>(undefined);
   const [episodes, setEpisodes] = useState<EpisodeProps[] | undefined>(undefined);
+  const [series, setSeries] = useState<SeriesItemProps[]>([]);
   const [countryNameZh, setCountryNameZh] = useState<string>("");
   const [statusName, setStatusName] = useState<string>("");
  
@@ -26,23 +31,13 @@ const VideoBangumiDetail: React.FC<{}> = () => {
         setBangumi(data);
         setCountryNameZh(nameZh);
         setStatusName(label);
+        setEpisodes(await getEpisodeList(params.id));
+        setSeries(await getSeriesList({ bangumi_id: params.id, by: 'bangumi_id' }));
       } catch (err: any) {
         message.error(err);
       }
     })()
-  }, []);
-
-  useEffect(() => {
-    if (bangumi) {
-      (async () => {
-        try {
-          setEpisodes(await getEpisodeList(params.id));
-        } catch (err: any) {
-          message.error(err);
-        }
-      })()
-    }
-  }, [bangumi])
+  }, [params.id]);
 
   return (
     <div className='app-video-bangumi-detail'>
@@ -69,9 +64,10 @@ const VideoBangumiDetail: React.FC<{}> = () => {
                   <Descriptions.Item label="所属频道">
                     {
                       bangumi.channel ?
-                      <a href={`/video/channel/details/${bangumi.channel.id}`}>
-                        {bangumi.channel.name}
-                      </a> :
+                      <a
+                        onClick={() => navigate(`/video/channel/details/${bangumi.channel.id}`)}
+                        children={bangumi.channel.name}
+                      /> :
                       <span>无</span>
                     }
                   </Descriptions.Item>
@@ -96,6 +92,7 @@ const VideoBangumiDetail: React.FC<{}> = () => {
             </div>
             <div className='app-video-bangumi-detail-main'>
               <EpisodeList episodes={episodes} />
+              <SeriesList series={series} currentBangumiId={params.id} />
             </div>
           </>
         ) : (

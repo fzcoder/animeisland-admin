@@ -7,3 +7,15 @@ html,body {
   width: inherit;
   height: inherit;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 5px;
+}

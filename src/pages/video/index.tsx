@@ -18,11 +18,14 @@ const BangumiEdit = lazy(() => import('./bangumi/Edit'));
 const BangumiTable = lazy(() => import('./bangumi/Table'));
 const BangumiDetails = lazy(() => import('./bangumi/Detail'));
 const BangumiPlay = lazy(() => import('./bangumi/Play'));
-const EpisodeCreate = lazy(() => import('./episode/Create'));
+const EpisodeCreate = lazy(() => import('./episode/create'));
 const EpisodeTable = lazy(() => import('./episode/Table'));
 const ChannelList = lazy(() => import('./channel/List'));
 const ChannelEdit = lazy(() => import('./channel/Edit'));
 const ChannelDetails = lazy(() => import('./channel/Detail'));
+const SeriesDetails = lazy(() => import('./series/Details'));
+const SeriesEdit = lazy(() => import('./series/Edit'));
+const SeriesTable = lazy(() => import('./series/Table'));
 const Settings = lazy(() => import('./settings/Settings'));
 const SourceList = lazy(() => import('./source/Table'));
 const SourceEdit = lazy(() => import('./source/Edit'));
@@ -35,7 +38,7 @@ export const VideoService = () => {
       menuProps={{
         mode: "inline",
         onClick: ({key}) => navigate(key),
-        defaultOpenKeys: ["/video/item", "/video/bangumi", "/video/channel"],
+        defaultOpenKeys: ["/video/item", "/video/bangumi", "/video/channel", "/video/series"],
         items: [
           { key: '/video', label: '首页', icon: <HomeOutlined /> },
           {
@@ -63,6 +66,15 @@ export const VideoService = () => {
             children: [
               { key: '/video/channel/edit', label: '添加频道', icon: <PlusCircleOutlined /> },
               { key: '/video/channel/list', label: '频道列表', icon: <OrderedListOutlined /> },
+            ]
+          },
+          {
+            key: '/video/series',
+            label: '系列管理',
+            icon: <MenuOutlined />,
+            children: [
+              { key: '/video/series/edit', label: '添加系列', icon: <PlusCircleOutlined /> },
+              { key: '/video/series/list', label: '系列列表', icon: <OrderedListOutlined /> },
             ]
           },
           // { key: '/video/settings', label: '设置', icon: <SettingOutlined /> }
@@ -351,4 +363,69 @@ export const VideoServiceSourceUpdate = () => (
     main={<SourceEdit updateMode/>}
   />
 );
+
+export const VideoSeriesCreate = () => {
+  return (
+    <ModulePage
+      breadcrumbProps={{
+        routes: [
+          { path: '/', breadcrumbName: '首页' },
+          { path: '/video', breadcrumbName: '视频服务' },
+          { path: '', breadcrumbName: '添加系列' },
+        ]
+      }}
+      renderHtmlTitle={(brand) => { return `${brand} | 添加系列`}}
+      main={<SeriesEdit />}
+    />
+  )
+};
+
+export const VideoSeriesDetails = () => {
+  return (
+    <ModulePage
+      breadcrumbProps={{
+        routes: [
+          { path: '/', breadcrumbName: '首页' },
+          { path: '/video', breadcrumbName: '视频服务' },
+          { path: '', breadcrumbName: '系列详情' },
+        ]
+      }}
+      renderHtmlTitle={(brand) => { return `${brand} | 系列详情`}}
+      main={<SeriesDetails />}
+    />
+  )
+};
+
+export const VideoSeriesTable = () => {
+  return (
+    <ModulePage
+      breadcrumbProps={{
+        routes: [
+          { path: '/', breadcrumbName: '首页' },
+          { path: '/video', breadcrumbName: '视频服务' },
+          { path: '', breadcrumbName: '系列列表' },
+        ]
+      }}
+      renderHtmlTitle={(brand) => { return `${brand} | 系列列表`}}
+      main={<SeriesTable />}
+    />
+  )
+};
+
+
+export const VideoSeriesUpdate = () => {
+  return (
+    <ModulePage
+      breadcrumbProps={{
+        routes: [
+          { path: '/', breadcrumbName: '首页' },
+          { path: '/video', breadcrumbName: '视频服务' },
+          { path: '', breadcrumbName: '修改系列' },
+        ]
+      }}
+      renderHtmlTitle={(brand) => { return `${brand} | 修改系列`}}
+      main={<SeriesEdit updateMode />}
+    />
+  )
+};
 
