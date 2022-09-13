@@ -35,7 +35,7 @@
     "eject": "react-scripts eject",
     "electron-dev": "electron . dev",
     "electron": "electron .",
-    "package": "electron-packager . AnimeIslandManager --platform=win32 --out=./out --icon=./public/favicon.ico --asar"
+    "package": "electron-packager . AnimeIslandManager --platform=win32 --out=./out --ignore=node_modules --icon=./public/favicon.ico --asar"
   },
   "eslintConfig": {
     "extends": [
