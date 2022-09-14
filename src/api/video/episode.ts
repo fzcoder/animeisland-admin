@@ -9,6 +9,13 @@ export const addForm = async (form: Record<string, any>): Promise<any> => {
     return Promise.reject(err);
   }
 }
+export const addForms= async (forms: Record<string, any>[]): Promise<any> => {
+  try {
+    await post('/video/episode/batch', forms);
+  } catch (err: any) {
+    return Promise.reject(err);
+  }
+}
 export const getInitForm = async (bangumiId: string): Promise<Record<string, any>> => {
   try {
     return Promise.resolve({

@@ -28,9 +28,9 @@ const VideoBangumiTablePage: React.FC<VideoBangumiTablePageProps> = () => {
             <Descriptions.Item label="所属频道">
               {
                 record.channel ?
-                <a href={`/video/channel/details/${record.channel.id}`}>
+                <Button type={"link"} onClick={() => navigate(`/video/channel/details/${record.channel.id}`)}>
                   {record.channel.name}
-                </a> :
+                </Button> :
                 <span>无</span>
               }
             </Descriptions.Item>

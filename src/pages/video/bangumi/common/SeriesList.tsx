@@ -25,7 +25,7 @@ export declare type SeriesListProps = {
 }
 const SeriesList: React.FC<SeriesListProps> = ({ series, currentBangumiId }) => {
   return (
-    series ? (
+    series.length > 0 ? (
       <div className='app-video-bangumi-common-series-list'>
         <div className='app-video-bangumi-common-series-list-header'>
           <span style={{ fontWeight: 'bold', fontSize: '14pt', marginBottom: '24px' }}>系列</span>

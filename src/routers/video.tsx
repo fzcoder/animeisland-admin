@@ -22,7 +22,7 @@ import {
   VideoSeriesDetails,
   VideoSeriesTable,
   VideoSeriesUpdate,
-  // VideoServiceSettings,
+  VideoServiceSettings,
   VideoServiceSourceCreate,
   VideoServiceSourceList,
   VideoServiceSourceUpdate,
@@ -60,7 +60,7 @@ const VideoServiceRoutes = (
     <Route path='/video/source/list' element={<Authentication><VideoServiceSourceList /></Authentication>} />
     <Route path='/video/source/edit/:id' element={<Authentication><VideoServiceSourceUpdate /></Authentication>} />
     {/** settings */}
-    {/** <Route path='/video/settings' element={<Authentication><VideoServiceSettings /></Authentication>} /> */}
+    <Route path='/video/settings' element={<Authentication><VideoServiceSettings /></Authentication>} />
   </Route>
 );
 

@@ -77,7 +77,7 @@ export const VideoService = () => {
               { key: '/video/series/list', label: '系列列表', icon: <OrderedListOutlined /> },
             ]
           },
-          // { key: '/video/settings', label: '设置', icon: <SettingOutlined /> }
+          { key: '/video/settings', label: '设置', icon: <SettingOutlined /> }
         ]
       }}
     />
@@ -98,7 +98,7 @@ export const VideoServiceHome = () => (
   />
 );
 
-/* export const VideoServiceSettings = () => (
+export const VideoServiceSettings = () => (
   <ModulePage
     breadcrumbProps={{
       routes: [
@@ -110,7 +110,7 @@ export const VideoServiceHome = () => (
     renderHtmlTitle={(brand) => { return `${brand} | 视频设置`}}
     main={<Settings />}
   />
-); */
+);
 
 export const VideoServiceItemUpload = () => (
   <ModulePage

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Tabs, Space, Upload, Form, List, Input, message, InputNumber, Card, Select} from 'antd';
+import { Button, Tabs, Space, Upload, Form, Input, message, InputNumber, Card, Select, Collapse, Divider} from 'antd';
 import { UploadOutlined, CheckOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { SingleImageUpload } from '../../../components/upload';
 import { EditPage } from '../../../components/advanced';
 import { getInitForm, addForm, addFormBatch, getForm, updateForm } from "../../../api/video/item";
 import { getVideoSourceMimeType, MimeTypeProps } from "../../../api/utils/mime-type";
-import { getUserInfo } from '../../../api/auth/user';
+import { getUserInfo, UserInfo } from '../../../api/auth/user';
+import { getForm as getVideoSettings, VideoSettingsProps } from '../../../api/video/settings';
+import { FormList } from '../../../components/ui';
 import "./styles/upload.css";
 const { TextArea } = Input;
 const { TabPane } = Tabs;
@@ -126,47 +128,80 @@ const SingleUpload: React.FC<SingleUploadProps> = ({updateMode}) => {
 }
 
 const MultipleUpload: React.FC<{}> = () => {
-  const [formDataList, setFormDataList] = useState<Record<string, any>[]>([]);
+  const [userInfo, setUserInfo] = useState<UserInfo>({id: "user_default", email: ""});
+  const [settings, setSettings] = useState<VideoSettingsProps>();
   const [dataSource, setDataSource] = useState<Record<string, any>[]>([]);
+  const [videoResourceUrlPrefix, setVideoResourceUrlPrefix] = useState<string>("");
+  const [showForms, setShowForms] = useState<boolean>(true);
+  useEffect(() => {
+    (async () => {
+      try {
+        setUserInfo(await getUserInfo());
+        setSettings(await getVideoSettings());
+      } catch (err: any) {
+        message.error(err);
+      }
+    })();
+  }, []);
+  useEffect(() => {
+    if (settings) {
+      setVideoResourceUrlPrefix(`${settings.videoResourceHost}${settings.videoResourceDir}`)
+    }
+  }, [settings]);
   return (
     <Space direction={"vertical"} style={{display: "flex"}}>
       <div style={{display: "flex", "alignItems": "center", "justifyContent": "space-between"}}>
-        <Upload
-          accept='.json'
-          name='file'
-          showUploadList={false}
-          maxCount={1}
-          multiple={false}
-          action={`${process.env.REACT_APP_SERVER_BASE_URL}/video/item/batch/upload`}
-          /* headers={{
-            Authorization: `Bearer ${localStorage.getItem('accessToken') || ""}`
-          }} */
-          onChange={({file}) => {
-            const { status, response } = file;
-            if (status === "done") {
-              const _dataSource: Record<string, any>[] = response.data;
+        <Space>
+          <Upload
+            accept={".mp4"}
+            name={"file"}
+            showUploadList={false}
+            multiple
+            beforeUpload={(_, fileList) => {
+              const _dataSource = [];
+              fileList.forEach(item => {
+                _dataSource.push({
+                  title: item.name,
+                  uid: userInfo.id,
+                  description: item.name,
+                  poster: "",
+                  srcList: [
+                    {
+                      height: 0,
+                      mimeType: item.type,
+                      quality: "",
+                      screenshot: "",
+                      uid: userInfo.id,
+                      url: item.name,
+                      width: 0
+                    }              
+                  ]
+                })
+              })
               setDataSource(_dataSource);
-              setFormDataList(_dataSource);
-            }
-          }}
-        >
-          <Button icon={<UploadOutlined />} disabled={dataSource.length > 0}>上传表单</Button>
-        </Upload>
+              return false;
+            }}
+          >
+            <Button icon={<UploadOutlined />} disabled={dataSource.length > 0}>选择文件</Button>
+          </Upload>
+        </Space>
         <Space>
           <Button
             type={"primary"}
             icon={<CheckOutlined />} 
-            children={"批量上传"}
+            children={"上传"}
             disabled={dataSource.length === 0}
             onClick={async () => {
               try {
-                const { id: uid } = await getUserInfo();
-                const _forms: Record<string, any>[] = [];
-                formDataList.forEach((value) => {
-                  _forms.push({...value, uid});
-                });
-                await addFormBatch(_forms);
-                message.success("批量上传成功")
+                const forms = [...dataSource];
+                forms.forEach((form, index) => {
+                  const srcList = form["srcList"];
+                  srcList.forEach((src: any, i : number) => {
+                    src["url"] = `${videoResourceUrlPrefix}${dataSource[index]["srcList"][i]["url"]}`
+                  })
+                })
+                await addFormBatch(forms);
+                message.success("上传成功")
               } catch (err: any) {
                 message.error(err);
               }
@@ -179,35 +214,99 @@ const MultipleUpload: React.FC<{}> = () => {
             children={"清空"}
             disabled={dataSource.length === 0}
             onClick={() => {
-              setFormDataList([]);
               setDataSource([]);
             }}
           />
         </Space>
       </div>
-      <List
-        dataSource={dataSource}
-        renderItem={(item, index) => (
-          <List.Item>
+      {
+        dataSource.length > 0 &&
+        <Collapse>
+          <Collapse.Panel header={"批量设置"} key={"1"}>
             <Form
-              initialValues={item}
-              style={{width: "100%"}}
-              onValuesChange={(_, allValues) => {
-                const _formDataList = formDataList;
-                _formDataList[index] = {...allValues};
-                setFormDataList(_formDataList);
+              initialValues={{
+                dir: "",
+                width: 0,
+                height: 0,
+                quality: "",
+                titlePrefix: "",
+                titleSuffix: "",
+              }}
+              onFinish={(values) => {
+                setShowForms(false);
+                setVideoResourceUrlPrefix(`${settings.videoResourceHost}${settings.videoResourceDir}${values.dir}`);
+                const _dataSource = [];
+                // padding zero
+                const padding_length = (dataSource.length + "").length;
+                const padding = function (numStr: string, len: number) {
+                  if (numStr.length >= len) {
+                    return numStr;
+                  }
+                  return padding("0"+numStr, len);
+                }
+                dataSource.forEach((item, index) => {
+                  const _s = []
+                  item.srcList.forEach((s: any) => {
+                    _s.push({
+                      ...s,
+                      width: values.width,
+                      height: values.height,
+                      quality: values.quality,
+                    });
+                  });
+                  _dataSource.push({
+                    ...item,
+                    title: `${values.titlePrefix}${padding((index+1)+"", padding_length)}${values.titleSuffix}`,
+                    srcList: _s,
+                  })
+                });
+                setDataSource(_dataSource);
+                setShowForms(true);
               }}
             >
-              <Form.Item name={"title"} label={"标题"}>
-                <Input />
+              <Form.Item name={"dir"} label={"路径前缀"}>
+                <Input allowClear />
               </Form.Item>
-              <Form.Item name={"poster"} label={"封面"}>
-                <SingleImageUpload defaultInputMode />
+              <Form.Item name={"titlePrefix"} label={"标题前缀"}>
+                <Input allowClear />
               </Form.Item>
-              <Form.Item name={"description"} label={"描述"}>
-                <TextArea rows={3} />
+              <Form.Item name={"titleSuffix"} label={"标题后缀"}>
+                <Input allowClear />
               </Form.Item>
-              <Form.Item name={"srcList"} label={"视频源"}>
+              <Form.Item name={"width"} label={"视频宽度"}>
+                <InputNumber />
+              </Form.Item>
+              <Form.Item name={"height"} label={"视频高度"}>
+                <InputNumber />
+              </Form.Item>
+              <Form.Item name={"quality"} label={"视频质量"}>
+                <Input allowClear />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" block htmlType={"submit"}>更新</Button>
+              </Form.Item>
+            </Form>
+          </Collapse.Panel>
+        </Collapse>
+      }
+      <Divider />
+      {showForms &&
+        <FormList
+          dataSource={dataSource}
+          formLayout={"vertical"}
+          onValuesChange={(_, allValues, index) => {
+            const _dataSource = dataSource;
+            _dataSource[index] = {...allValues};
+            setDataSource(_dataSource);
+          }}
+          formItems={[
+            { name: "title", label: "标题", children: <Input allowClear/> },
+            { name: "poster", label: "封面", children: <SingleImageUpload defaultInputMode /> },
+            { name: "description", label: "描述", children: <TextArea rows={3} /> },
+            {
+              name: "srcList",
+              label: "视频源",
+              children: (
                 <Form.List name={"srcList"}>
                   {(fields, {add, remove}) => (
                     <Space direction={"vertical"} style={{display: "flex"}}>
@@ -258,7 +357,7 @@ const MultipleUpload: React.FC<{}> = () => {
                             label={"视频地址"}
                             name={[field.name, "url"]}
                           >
-                            <Input />
+                            <Input addonBefore={videoResourceUrlPrefix} />
                           </Form.Item>
                           <Form.Item
                             {...field}
@@ -276,11 +375,11 @@ const MultipleUpload: React.FC<{}> = () => {
                     </Space>
                   )}
                 </Form.List>
-              </Form.Item>
-            </Form>
-          </List.Item>
-        )}
-      />
+              )
+            },
+          ]}
+        />
+      }
     </Space>
   )
 }
@@ -295,17 +394,7 @@ const VideoServiceItemUpload: React.FC<VideoServiceItemPageProps> = ({updateMode
         updateMode ? (
           <SingleUpload updateMode />
         ) : (
-          <Tabs
-            defaultActiveKey={"single"}
-            tabPosition={'right'}
-          >
-            <TabPane tab="单视频上传" key={"single"}>
-              <SingleUpload />
-            </TabPane>
-            <TabPane tab="多视频上传" key={"mul"}>
-              <MultipleUpload />
-            </TabPane>
-          </Tabs>
+          <MultipleUpload />
         )
       }    
     </div>
