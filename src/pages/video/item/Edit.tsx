@@ -300,6 +300,7 @@ const MultipleUpload: React.FC<{}> = () => {
             setDataSource(_dataSource);
           }}
           formItems={[
+            { name: "uid", hidden: true, children: <Input allowClear/> },
             { name: "title", label: "标题", children: <Input allowClear/> },
             { name: "poster", label: "封面", children: <SingleImageUpload defaultInputMode /> },
             { name: "description", label: "描述", children: <TextArea rows={3} /> },
