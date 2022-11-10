@@ -58,6 +58,6 @@
   "devDependencies": {
     "@types/video.js": "^7.3.44",
     "cross-env": "^7.0.3",
-    "electron": "^17.1.2"
+    "electron": "^18.3.7"
   }
 }
